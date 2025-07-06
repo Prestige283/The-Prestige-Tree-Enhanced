@@ -1,7 +1,7 @@
 let modInfo = {
 	name: "Prestige Tree Rewritten",
-	id: "ptr",
-	author: "Jacorb",
+	id: "ptr+",
+	author: "Jacorb + Prestige283",
 	pointsName: "points",
 	discordName: "PT Rewritten Server",
 	discordLink: "https://discord.gg/TFCHJJT",
@@ -55,10 +55,12 @@ function getPointGen() {
 	if (player.s.unlocked) gain = gain.times(buyableEffect("s", 11));
 	if (player.h.unlocked) gain = gain.times(tmp.h.effect);
 	if (player.q.unlocked) gain = gain.times(tmp.q.enEff);
+	if (hasMilestone("xx",0)) gain = gain.times(10);
 	
 	if (inChallenge("h", 31)) gain = gain.root(tmp.h.pointRoot31);
 	if (hasUpgrade("ss", 43)) gain = gain.pow(gain.lt(tmp.ss.upgrades[43].endpoint)?1.1:1.01);
 	if (hasUpgrade("hn", 31)) gain = gain.pow(1.05);
+	if (hasMilestone("xx",0)) gain = gain.pow(upgradeEffect("p", 11));
 	return gain
 }
 

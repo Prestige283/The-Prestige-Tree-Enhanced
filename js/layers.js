@@ -23,11 +23,13 @@ addLayer("p", {
 			if (player.s.unlocked) mult = mult.times(buyableEffect("s", 11));
 			if (hasUpgrade("e", 12)) mult = mult.times(upgradeEffect("e", 12));
 			if (hasUpgrade("b", 31)) mult = mult.times(upgradeEffect("b", 31));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
             let exp = new Decimal(1)
 			if (hasUpgrade("p", 31)) exp = exp.times(1.05);
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
 			return exp;
         },
         row: 0, // Row the layer is in on the tree (0 is the first row)
@@ -61,6 +63,11 @@ addLayer("p", {
 				title: "Begin",
 				description: "Generate 1 Point every second.",
 				cost() { return tmp.h.costMult11.times(((Array.isArray(tmp.ma.mastered))?tmp.ma.mastered.includes(this.layer):false)?2:1).pow(tmp.h.costExp11) },
+				effect() {
+					let exp= new Decimal(1.02)
+					if (hasMilestone("xx", 1)) exp=exp.times(1.1).div(1.02)
+					return exp
+				},
 			},
 			12: {
 				title: "Prestige Boost",
@@ -1322,10 +1329,13 @@ addLayer("e", {
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1)
 			if (hasUpgrade("e", 24)) mult = mult.times(upgradeEffect("e", 24));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
 		passiveGeneration() { return (hasMilestone("q", 1)&&player.ma.current!="e")?1:0 },
 		update(diff) {
@@ -2635,10 +2645,13 @@ addLayer("h", {
 			if (hasUpgrade("q", 14)) mult = mult.times(upgradeEffect("q", 14).h);
 			if (player.m.unlocked) mult = mult.times(((Array.isArray(tmp.ma.mastered))?tmp.ma.mastered.includes("m"):false)?tmp.m.mainHexEff:tmp.m.hexEff);
 			if (hasUpgrade("ba", 22)) mult = mult.times(tmp.ba.negBuff);
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 3, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -2943,10 +2956,13 @@ addLayer("q", {
 			if (player.m.unlocked) mult = mult.times(((Array.isArray(tmp.ma.mastered))?tmp.ma.mastered.includes("m"):false)?tmp.m.mainHexEff:tmp.m.hexEff);
 			if (hasUpgrade("ba", 22)) mult = mult.times(tmp.ba.negBuff);
 			if (hasUpgrade("hn", 43)) mult = mult.times(upgradeEffect("hn", 43));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 3, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -3563,10 +3579,13 @@ addLayer("o", {
 		}, // Prestige currency exponent
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = buyableEffect("o", 11);
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1);
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 3, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -4161,10 +4180,13 @@ addLayer("m", {
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1);
 			if (hasAchievement("a", 74)) mult = mult.times(challengeEffect("h", 32));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult.times(tmp.n.realDustEffs2?tmp.n.realDustEffs2.purpleBlue:new Decimal(1));
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 4, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -4530,10 +4552,13 @@ addLayer("ba", {
             mult = new Decimal(1);
 			if (hasAchievement("a", 74)) mult = mult.times(challengeEffect("h", 32));
 			if (player.mc.unlocked) mult = mult.times(clickableEffect("mc", 22));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 4, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -5169,12 +5194,15 @@ addLayer("hn", {
 			if (hasUpgrade("g", 35) && player.i.buyables[12].gte(2)) mult = mult.times(upgradeEffect("g", 35));
 			if (hasUpgrade("s", 35) && player.i.buyables[12].gte(5)) mult = mult.times(upgradeEffect("s", 35));
 			if (player.ma.unlocked) mult = mult.times(tmp.ma.effect);
+			if (hasMilestone("xx",0)) mult = mult.times(10);
 			return mult;
 		},
 		getResetGain() {
 			let gain = player.m.points.div(tmp.hn.req.m).pow(tmp.hn.exp.m).times(player.ba.points.div(tmp.hn.req.ba).pow(tmp.hn.exp.ba));
 			if (gain.gte(1e5)) gain = softcap("HnG", gain);
-			return gain.times(tmp.hn.gainMult).floor();
+			gain=gain.times(tmp.hn.gainMult)
+			if (hasMilestone("xx",0)) gain = gain.pow(upgradeEffect("p", 11));
+			return gain.floor();
 		},
 		resetGain() { return this.getResetGain() },
 		getNextAt() {
@@ -5791,11 +5819,14 @@ addLayer("n", {
 			if (player.ge.unlocked) mult = mult.times(tmp.ge.rotEff);
 			if ((Array.isArray(tmp.ma.mastered))?tmp.ma.mastered.includes("i"):false) mult = mult.times(Decimal.pow(10, player.i.nb));
 			if (hasUpgrade("ai", 24)) mult = mult.times(upgradeEffect("ai", 24));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
 		passiveGeneration() { return (hasMilestone("ma", 3)&&player.ma.current!="n")?1:0 },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 5, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -6014,10 +6045,13 @@ addLayer("hs", {
 			if (hasUpgrade("s", 33) && player.i.buyables[12].gte(5)) mult = mult.times(upgradeEffect("s", 33));
 			if (player.ma.unlocked) mult = mult.times(tmp.ma.effect);
 			if ((Array.isArray(tmp.ma.mastered))?tmp.ma.mastered.includes("i"):false) mult = mult.times(Decimal.pow(10, player.i.hb));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 5, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -6954,11 +6988,13 @@ addLayer("ge", {
 			if (hasMilestone("id", 5) && tmp.id) mult = mult.times(tmp.id.rev.max(1));
 			if (hasUpgrade("ai", 33)) mult = mult.times(upgradeEffect("ai", 33));
 			if (hasUpgrade("ai", 44)) mult = mult.times(upgradeEffect("ai", 44));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
             let exp = new Decimal(1)
 			if (hasUpgrade("ai", 34)) exp = exp.times(1.2);
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
 			return exp;
         },
         row: 6, // Row the layer is in on the tree (0 is the first row)
@@ -7280,10 +7316,13 @@ addLayer("mc", {
 			if (player.mc.upgrades.includes(11)) mult = mult.times(buyableEffect("mc", 12));
 			if (hasMilestone("mc", 0)) mult = mult.times(player.ne.thoughts.max(1));
 			if (hasUpgrade("ai", 33)) mult = mult.times(upgradeEffect("ai", 33));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p", 11));
+            return exp
         },
         row: 6, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -7586,11 +7625,14 @@ addLayer("en", {
 			if (player.r.unlocked) mult = mult.times(tmp.r.producerEff);
 			if (hasMilestone("r", 0)) mult = mult.times(player.r.maxMinibots.max(1));
 			if (player.ai.unlocked && tmp.ai) mult = mult.times(tmp.ai.conscEff1);
+			if (hasMilestone("xx",0)) mult = mult.times(10);
 			return mult;
 		},
 		getResetGain() {
 			let gain = player.o.points.div(tmp.en.req).plus(1).log2().pow(tmp.en.exp);
-			return gain.times(tmp.en.gainMult).floor();
+			gain=gain.times(tmp.en.gainMult)
+			if (hasMilestone("xx",0)) gain = gain.pow(upgradeEffect("p", 11));
+			return gain.floor();
 		},
 		resetGain() { return this.getResetGain() },
 		getNextAt() {
@@ -8134,11 +8176,14 @@ addLayer("r", {
 			if (hasMilestone("r", 3)) mult = mult.times(2);
 			if (player.ai.unlocked && tmp.ai) mult = mult.times(tmp.ai.conscEff1);
 			if (hasUpgrade("ai", 33)) mult = mult.times(upgradeEffect("ai", 33));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
 			return mult;
 		},
 		getResetGain() {
 			let gain = Decimal.pow(tmp.r.req, player.en.total.plus(1).log(tmp.r.req).pow(tmp.r.exp)).div(tmp.r.req);
-			return gain.times(tmp.r.gainMult).floor();
+			gain=gain.times(tmp.r.gainMult);
+			gain=gain.pow(upgradeEffect("p", 11))
+			return gain.floor();
 		},
 		resetGain() { return this.getResetGain() },
 		getNextAt() {
@@ -8481,10 +8526,13 @@ addLayer("ai", {
 			if (hasUpgrade("ai", 41)) mult = mult.times(upgradeEffect("ai", 41));
 			if (hasUpgrade("ai", 43)) mult = mult.times(upgradeEffect("ai", 43));
 			if (hasUpgrade("ai", 44)) mult = mult.times(player.ai.buyables[11].max(1));
+			if (hasMilestone("xx",0)) mult = mult.times(10);
             return mult
         },
         gainExp() { // Calculate the exponent on main currency from bonuses
-            return new Decimal(1)
+			exp=new Decimal(1)
+			if (hasMilestone("xx",0)) exp = exp.times(upgradeEffect("p",11));
+            return exp
         },
         row: 6, // Row the layer is in on the tree (0 is the first row)
         hotkeys: [
@@ -9913,3 +9961,41 @@ addLayer("ab", {
 		},
 	},
 })
+
+
+
+addLayer("xx", {
+        name: "?", // This is optional, only used in a few places, If absent it just uses the layer id.
+        symbol: "?", // This appears on the layer's node. Default is the id with the first letter capitalized
+        position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+        color: "#555555",
+		nodeStyle() {return {
+			"background": "radial-gradient(#777777, #111111)",
+        }},
+        requires: new Decimal(0), // Can be a function that takes requirement increases into account
+        resource: "?", // Name of prestige currency
+        baseResource: "points", // Name of resource prestige is based on
+        baseAmount() {return player.points}, // Get the current amount of baseResource
+        type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+        
+        row: 9, // Row the layer is in on the tree (0 is the first row)
+        
+        layerShown(){return true},
+		startData() { return {
+			unlocked: true,
+		}},
+		milestones: {
+    		0: {
+        		requirementDescription: "???",
+        		effectDescription: "A normal TPT run...<br>But something seems different this time...<br>x10 and ^1.02 to all non-static layers and points",
+        		done() { return player.p.points.gte(1) },
+				unlocked() {return hasMilestone("xx",0)},
+    		},
+			1: {
+        		requirementDescription: "???",
+        		effectDescription: "After beating the game, a strange force wants you to go further...<br>Milestone 1 effect increased to ^1.1",
+        		done() { return player.points.gte(modInfo.endgame) },
+				unlocked() {return hasMilestone("xx",1)},
+    		}
+		},
+	})
